@@ -30,19 +30,19 @@ public final class Atm {
         try {
             if (split.length > 0) {
                 switch (split[0]) {
-                    case "login":
+                    case Commands.LOGIN:
                         login(split);
                         break;
-                    case "view":
+                    case Commands.VIEW:
                         result = view();
                         break;
-                    case "deposit":
+                    case Commands.DEPOSIT:
                         deposit(split);
                         break;
-                    case "withdraw":
+                    case Commands.WITHDRAW:
                         withdraw(split);
                         break;
-                    case "exit":
+                    case Commands.EXIT:
                         isRunning = false;
                         break;
                     default:
