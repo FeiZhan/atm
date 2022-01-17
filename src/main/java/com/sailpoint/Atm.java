@@ -8,7 +8,7 @@ public final class Atm {
     private boolean isLogin = false;
     private boolean isRunning = true;
     private double balance = 0.0;
-    private String pin = "1234";
+    private String pin = Constants.DEFAULT_PIN;
 
     public static void main(String[] args) {
         Atm atm = new Atm();
@@ -24,7 +24,7 @@ public final class Atm {
     }
 
     public String run(String input) {
-        String result = "ok";
+        String result = Constants.OK;
         String[] split = input.split(" ");
 
         try {
@@ -46,7 +46,7 @@ public final class Atm {
                         isRunning = false;
                         break;
                     default:
-                        throw new RuntimeException("Unknown command.");
+                        throw new RuntimeException(ErrorMessages.UNKNOWN);
                 }
             }
         } catch (RuntimeException e) {
@@ -60,13 +60,13 @@ public final class Atm {
         isLogin = false;
 
         if (split == null) {
-            throw new NullPointerException("Invalid input");
+            throw new NullPointerException(ErrorMessages.INVALID);
         } else if (split.length < 2) {
-            throw new InputMismatchException("No input pin");
+            throw new InputMismatchException(ErrorMessages.NO_PIN);
         } else if (split[1].length() != pin.length()) {
-            throw new InputMismatchException("Wrong pin length");
+            throw new InputMismatchException(ErrorMessages.WRONG_PIN_LENGTH);
         } else if (!split[1].equals(pin)) {
-            throw new RuntimeException("Wrong pin");
+            throw new RuntimeException(ErrorMessages.WRONG_PIN);
         } else {
             isLogin = true;
         }
@@ -74,7 +74,7 @@ public final class Atm {
 
     private String view() {
         if (!isLogin) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException(ErrorMessages.UNAUTHORIZED);
         }
 
         return Double. toString(balance);
@@ -82,7 +82,7 @@ public final class Atm {
 
     private void deposit(String[] split) {
         if (!isLogin) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException(ErrorMessages.UNAUTHORIZED);
         }
 
         balance += parse(split, Double.MAX_VALUE);
@@ -90,7 +90,7 @@ public final class Atm {
 
     private void withdraw(String[] split) {
         if (!isLogin) {
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException(ErrorMessages.UNAUTHORIZED);
         }
 
         balance -= parse(split, balance);
@@ -98,16 +98,16 @@ public final class Atm {
 
     private double parse(String[] split, double max) {
         if (split == null) {
-            throw new NullPointerException("Invalid input");
+            throw new NullPointerException(ErrorMessages.INVALID);
         } else if (split.length < 2) {
-            throw new InputMismatchException("No input number");
+            throw new InputMismatchException(ErrorMessages.NO_NUMBER);
         }
 
         double number = Double.parseDouble(split[1]);
         if (number <= 0) {
-            throw new NumberFormatException("Not positive number");
+            throw new NumberFormatException(ErrorMessages.NOT_POSITIVE);
         } else if (number >= max) {
-            throw new NumberFormatException("Exceed balance");
+            throw new NumberFormatException(ErrorMessages.EXCEED_BALANCE);
         }
 
         return number;
