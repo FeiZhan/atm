@@ -36,6 +36,12 @@ public final class Atm {
                     case "view":
                         result = view();
                         break;
+                    case "deposit":
+                        deposit(split);
+                        break;
+                    case "withdraw":
+                        withdraw(split);
+                        break;
                     case "exit":
                         isRunning = false;
                         break;
@@ -72,5 +78,38 @@ public final class Atm {
         }
 
         return Double. toString(balance);
+    }
+
+    private void deposit(String[] split) {
+        if (!isLogin) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        balance += parse(split, Double.MAX_VALUE);
+    }
+
+    private void withdraw(String[] split) {
+        if (!isLogin) {
+            throw new RuntimeException("Unauthorized");
+        }
+
+        balance -= parse(split, balance);
+    }
+
+    private double parse(String[] split, double max) {
+        if (split == null) {
+            throw new NullPointerException("Invalid input");
+        } else if (split.length < 2) {
+            throw new InputMismatchException("No input number");
+        }
+
+        double number = Double.parseDouble(split[1]);
+        if (number <= 0) {
+            throw new NumberFormatException("Not positive number");
+        } else if (number >= max) {
+            throw new NumberFormatException("Exceed balance");
+        }
+
+        return number;
     }
 }
